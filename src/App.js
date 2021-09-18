@@ -3,10 +3,10 @@ import PizzaForm from './PizzaForm';
 import Pizza from './Pizza';
 import * as yup from 'yup';
 import "./index.css";
-import ReactDOM from "react-dom";
+import {Route, Switch} from "react-dom";
 import axios from 'axios';
 import schema from './formSchema';
-
+import Nav from './nav';
 // const App = () => {}
 
 //   const [pizza, setPizza] = useState([]);
@@ -51,6 +51,7 @@ export default function App() {
   const postNewOrder = newOrder => {
     axios.post('https://reqres.in/api/orders', newOrder)
     .then(res => {
+      console.log(res.data)
       setOrders([res.data, ...orders]);
       setFormValues(initialFormValues);
     }).catch(err => {
@@ -59,21 +60,34 @@ export default function App() {
     })
   }
 
-    const validate = (name, value) => {
-    yup.reach(schema, name)
-      .validate(value)
-      .then(() => setFormErrors({ ...formErrors, [name]: '' }))
-      .catch(err => setFormErrors({ ...formErrors, [name]: err.errors[0] }))
-  }
+  //   const validate = (name, value) => {
+  //   yup.reach(schema, name)
+  //     .validate(value)
+  //     .then(() => setFormErrors({ ...formErrors, [name]: '' }))
+  //     .catch(err => setFormErrors({ ...formErrors, [name]: err.errors[0] }))
+  // }
+
+  // const inputChange = (name, value) => {
+  //   validate(name, value);
+  //   setFormValues({
+  //     ...formValues,
+  //     [name]: value 
+  //   })
+  // }
 
   const inputChange = (name, value) => {
-    validate(name, value);
+    yup.reach(schema, name)
+      .validate(value)
+      .then(() => {setFormErrors({
+        ...formErrors, [name]: ''})})
+      .catch(err => {setFormErrors({
+        ...formErrors, [name]: err.errors[0]})})
     setFormValues({
       ...formValues,
-      [name]: value 
+      [name]: value
     })
   }
-
+    
   const orderButton = () => {
     const newOrder = {
       name: formValues.name.trim(),
@@ -85,15 +99,11 @@ export default function App() {
        'canadian-bacon', 'spicy-italian-sausage'].filter(topping => !!formValues[topping])
     }
     postNewOrder(newOrder);
-
     
     // {orders.map(getOrders => {return (<Pizza key={data.id} details={data} />)})}
 
-
-}
+  }
    
-
-
   useEffect(() => {
     getOrders()
   }, [])
@@ -104,11 +114,14 @@ export default function App() {
 
   return (
     <div className='container'>
-      <header>
+      <header >
       <button>Pizza?</button>
         <h1>Lambda Eats</h1>
-        </header>
-      
+      </header>
+    <>
+    <Switch>
+    <Route path="/pizza">
+    <Nav />
       <PizzaForm
         values={formValues}
         change={inputChange}
@@ -116,8 +129,13 @@ export default function App() {
         disabled={disabled}
         errors={formErrors}
       />
-
-
+    </Route>
+    <Route id='order-pizza' path="/">
+    <Nav />
+{/* <HomePage /> */}
+    </Route>
+    </Switch>
+    </>
     </div>
   )
 }
