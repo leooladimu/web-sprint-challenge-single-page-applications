@@ -78,7 +78,7 @@ export default function App() {
   }
 
   const inputChange = (name, value) => {
-    // 🔥 STEP 10- RUN VALIDATION WITH YUP
+    //  STEP 10- RUN VALIDATION WITH YUP
     validate(name, value);
     setFormValues({
       ...formValues,
@@ -88,14 +88,16 @@ export default function App() {
 
   const formSubmit = () => {
     const newOrder = {
-      username: formValues.username.trim(),
-      email: formValues.email.trim(),
-      role: formValues.role.trim(),
-      civil: formValues.civil.trim(),
-      // 🔥 STEP 7- WHAT ABOUT HOBBIES? // values[name-first] // formValuesblah]
-      hobbies: ['hiking', 'reading', 'coding'].filter(hobby => !!formValues[hobby])
+      name: formValues.name.trim(),
+      size: formValues.size.trim(),
+      originalRed: formValues.originalRed.trim(),
+      garlicRanch: formValues.garlicRanch.trim(),
+      bbqSauce: formValues.bbqSauce.trim(),
+      spinachAlfredo: formValues.spinachAlfredo.trim(),
+      special: formValues.special.trim(),
+      toppings: ['pepperoni', 'sausage', 'canadianBacon', 'spiceyItalianSausage'].filter(topping => !!formValues[topping])
     }
-    // 🔥 STEP 8- POST NEW FRIEND USING HELPER
+
     postNewOrder(newOrder);
   }
 
